@@ -45,7 +45,7 @@ export default function WeatherCard({ weather, location }) {
       <Card.Content>
         <Text style={[styles.location, { color: theme.colors.text }]}>{location}</Text>
         <View style={styles.currentWeather}>
-          <MaterialCommunityIcons name={icon} size={64} color={theme.colors.primary} />
+          <MaterialCommunityIcons name={icon} size={80} color={theme.colors.primary} />
           <View style={styles.temperatureContainer}>
             <Text style={[styles.temperature, { color: theme.colors.text }]}>
               {Math.round(current.temperature)}°C
@@ -57,22 +57,25 @@ export default function WeatherCard({ weather, location }) {
         </View>
         <View style={styles.details}>
           <View style={styles.detail}>
-            <MaterialCommunityIcons name="water-percent" size={24} color={theme.colors.primary} />
+            <MaterialCommunityIcons name="water-percent" size={28} color={theme.colors.primary} />
             <Text style={[styles.detailText, { color: theme.colors.text }]}>
               {current.relative_humidity}%
             </Text>
+            <Text style={[styles.detailLabel, { color: theme.colors.text }]}>Humidity</Text>
           </View>
           <View style={styles.detail}>
-            <MaterialCommunityIcons name="weather-windy" size={24} color={theme.colors.primary} />
+            <MaterialCommunityIcons name="weather-windy" size={28} color={theme.colors.primary} />
             <Text style={[styles.detailText, { color: theme.colors.text }]}>
               {Math.round(current.windspeed)} km/h
             </Text>
+            <Text style={[styles.detailLabel, { color: theme.colors.text }]}>Wind</Text>
           </View>
           <View style={styles.detail}>
-            <MaterialCommunityIcons name="eye" size={24} color={theme.colors.primary} />
+            <MaterialCommunityIcons name="eye" size={28} color={theme.colors.primary} />
             <Text style={[styles.detailText, { color: theme.colors.text }]}>
               {current.visibility} km
             </Text>
+            <Text style={[styles.detailLabel, { color: theme.colors.text }]}>Visibility</Text>
           </View>
         </View>
       </Card.Content>
@@ -84,38 +87,53 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 16,
     elevation: 4,
+    marginHorizontal: 16,
+    marginVertical: 8,
   },
   location: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 16,
+    textAlign: 'center',
   },
   currentWeather: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    justifyContent: 'center',
+    marginBottom: 24,
   },
   temperatureContainer: {
     marginLeft: 16,
+    alignItems: 'center',
   },
   temperature: {
-    fontSize: 48,
+    fontSize: 56,
     fontWeight: 'bold',
   },
   feelsLike: {
-    fontSize: 16,
+    fontSize: 18,
     opacity: 0.7,
+    marginTop: 4,
   },
   details: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 8,
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.1)',
   },
   detail: {
     alignItems: 'center',
   },
   detailText: {
+    marginTop: 8,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  detailLabel: {
+    fontSize: 12,
+    opacity: 0.7,
     marginTop: 4,
-    fontSize: 14,
   },
 }); 

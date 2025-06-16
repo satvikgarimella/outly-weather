@@ -7,7 +7,23 @@ export const fetchWeather = async (latitude, longitude) => {
       `${BASE_URL}/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weathercode,windspeed_10m,visibility&hourly=temperature_2m,weathercode&timezone=auto`
     );
     const data = await response.json();
-    return data;
+    
+    // Transform the data to match our expected format
+    return {
+      current: {
+        temperature: data.current.temperature_2m,
+        apparent_temperature: data.current.apparent_temperature,
+        relative_humidity: data.current.relative_humidity_2m,
+        weathercode: data.current.weathercode,
+        windspeed: data.current.windspeed_10m,
+        visibility: data.current.visibility,
+      },
+      hourly: data.hourly.time.map((time, index) => ({
+        time,
+        temperature: data.hourly.temperature_2m[index],
+        weathercode: data.hourly.weathercode[index],
+      })),
+    };
   } catch (error) {
     console.error('Error fetching weather:', error);
     throw error;
