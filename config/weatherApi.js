@@ -4,7 +4,11 @@ const BASE_URL = 'https://api.open-meteo.com/v1';
 export const fetchWeather = async (latitude, longitude) => {
   try {
     const response = await fetch(
-      `${BASE_URL}/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weathercode,windspeed_10m,visibility&hourly=temperature_2m,weathercode&timezone=auto`
+      `${BASE_URL}/forecast?latitude=${latitude}&longitude=${longitude}` +
+      `&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weathercode,windspeed_10m,visibility` +
+      `&hourly=temperature_2m,weathercode` +
+      `&daily=sunrise,sunset` +
+      `&timezone=auto`
     );
     const data = await response.json();
     
@@ -23,6 +27,8 @@ export const fetchWeather = async (latitude, longitude) => {
         temperature: data.hourly.temperature_2m[index],
         weathercode: data.hourly.weathercode[index],
       })),
+      sunrise: data.daily.sunrise ? data.daily.sunrise[0] : null,
+      sunset: data.daily.sunset ? data.daily.sunset[0] : null,
     };
   } catch (error) {
     console.error('Error fetching weather:', error);

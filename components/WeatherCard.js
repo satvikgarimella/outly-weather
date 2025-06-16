@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { Card, Text, useTheme } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -33,12 +33,23 @@ const getWeatherIcon = (code) => {
   }
 };
 
-export default function WeatherCard({ weather, location }) {
+const toF = (c) => (c * 9) / 5 + 32;
+
+function formatTime(isoString) {
+  if (!isoString) return '--:--';
+  const d = new Date(isoString);
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+export default function WeatherCard({ weather, location, unit = 'c' }) {
   const theme = useTheme();
   if (!weather) return null;
 
-  const { current, hourly } = weather;
+  const { current, sunrise, sunset } = weather;
   const icon = getWeatherIcon(current.weathercode);
+  const temp = unit === 'f' ? Math.round(toF(current.temperature)) : Math.round(current.temperature);
+  const feelsLike = unit === 'f' ? Math.round(toF(current.apparent_temperature)) : Math.round(current.apparent_temperature);
+  const tempUnit = unit === 'f' ? '°F' : '°C';
 
   return (
     <Card style={[styles.card, { backgroundColor: theme.colors.surface }]}>
@@ -48,10 +59,10 @@ export default function WeatherCard({ weather, location }) {
           <MaterialCommunityIcons name={icon} size={80} color={theme.colors.primary} />
           <View style={styles.temperatureContainer}>
             <Text style={[styles.temperature, { color: theme.colors.text }]}>
-              {Math.round(current.temperature)}°C
+              {temp}{tempUnit}
             </Text>
             <Text style={[styles.feelsLike, { color: theme.colors.text }]}>
-              Feels like {Math.round(current.apparent_temperature)}°C
+              Feels like {feelsLike}{tempUnit}
             </Text>
           </View>
         </View>
@@ -76,6 +87,18 @@ export default function WeatherCard({ weather, location }) {
               {current.visibility} km
             </Text>
             <Text style={[styles.detailLabel, { color: theme.colors.text }]}>Visibility</Text>
+          </View>
+        </View>
+        <View style={styles.sunTimesRow}>
+          <View style={styles.sunTime}>
+            <MaterialCommunityIcons name="weather-sunset-up" size={24} color={theme.colors.primary} />
+            <Text style={[styles.sunTimeLabel, { color: theme.colors.text }]}>Sunrise</Text>
+            <Text style={[styles.sunTimeValue, { color: theme.colors.text }]}>{formatTime(sunrise)}</Text>
+          </View>
+          <View style={styles.sunTime}>
+            <MaterialCommunityIcons name="weather-sunset-down" size={24} color={theme.colors.primary} />
+            <Text style={[styles.sunTimeLabel, { color: theme.colors.text }]}>Sunset</Text>
+            <Text style={[styles.sunTimeValue, { color: theme.colors.text }]}>{formatTime(sunset)}</Text>
           </View>
         </View>
       </Card.Content>
@@ -135,5 +158,24 @@ const styles = StyleSheet.create({
     fontSize: 12,
     opacity: 0.7,
     marginTop: 4,
+  },
+  sunTimesRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 18,
+    marginBottom: 8,
+  },
+  sunTime: {
+    alignItems: 'center',
+  },
+  sunTimeLabel: {
+    fontSize: 13,
+    opacity: 0.7,
+    marginTop: 2,
+  },
+  sunTimeValue: {
+    fontSize: 15,
+    fontWeight: '600',
+    marginTop: 2,
   },
 }); 
